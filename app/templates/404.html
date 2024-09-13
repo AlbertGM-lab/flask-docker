@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="container py-5 text-center">
+	<h1 class="display-5 fw-bold">Página no encontrada</h1>
+	<p class="fs-4 py-3">¡Vaya! No hemos encontrado la página que buscas</p>
+    
+    <a class="btn btn-lg btn-danger" href="{{url_for('home')}}">Volver al inicio</a>
+</div>
+{% endblock %}
