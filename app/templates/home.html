@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block title %} Home {% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+    <div class="display-5 text-center">
+        {% if current_user.is_authenticated %}
+        <h1>Bienvenido {{ session['name'] }}</h1>
+        {% else %}
+        <h1 class="display-5 fw-bold text-center">Inicia Sesión</h1>
+        <p class="fs-4 py-3 text-center">Para poder utilizar las herramientas primero debes iniciar sesión</p>
+        <a href="/login" style="text-decoration:none">
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Login</button>
+        </a>
+        {% endif %}
+        {% if current_user.is_authenticated and current_user.has_role('admin') %}
+        <a href="/register" style="text-decoration:none"
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,115 @@
+<style>
+	.header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .logo {
+        width: 100px; /* Ajustar según sea necesario */
+        height: auto;
+        margin-right: 10px;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td {
+        padding: 5px 10px;
+        text-align: center;
+        border: 1px solid black;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+	td.cell {
+		width: 100%; /* Ajustar según sea necesario */
+        white-space: nowrap;
+	}
+	td.coment {
+		width: 100%;
+	}
+	textarea.form-control {
+        width: 100%;
+    }
+	h1.titulo {
+		text-align: center;
+	}
+
+    .editable-div {
+	border: 1px solid black;
+	text-align: left;
+    padding: 5px;
+    width: 100%;
+    min-height: 100px;
+    resize: both;
+    overflow: auto;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+</style>
+<div class="container py-5" name="form-cctv">
+    <meta charset="UTF-8">
+    <div class="header">
+        <img src="http://127.0.0.1/static/img/logo-sic24.png" alt="Logotipo" class="logo">
+        <h1 class="titulo">HOJA DE PROGRAMACIÓN CCTV</h1>
+    </div>
+        <br>
+        <table>
+            <tr>
+                <td class="cell"><label>Modelo del Grabador: </label> {{ modelo_grabador }}</td>
+                <td class="cell"><label>Nº de Série: </label> {{ n_serie }}</td>
+                <td class="cell"><label>Abonado: </label> {{ abonado }}</td>       
+                <td class="cell">Videoverificació? {{ videoverificacio }}</td>
+            </tr>
+            <tr>
+                <td class="cell"><label>IP: </label> {{ ip_gravador }}</td>
+                <td class="cell"><label>Puerta de Enlace: </label> {{ puerta_enlace }}</td>
+                <td class="cell"><label>Puertos: </label> {{ puertos }}</td>
+                <td class="cell"><label>DNS / IP Fija: </label> {{ dns }}</td>
+            </tr>
+            <tr>
+                <td class="cell"><label>Usuario: </label> {{ usuario }}</td>
+                <td class="cell"><label>Contraseña: </label> {{ contraseña }}</td>
+                <td class="cell"><label>Usuario 2: </label> {{ usuario2 }}</td>
+                <td class="cell"><label>Contraseña 2: </label> {{ contraseña2 }}</td>
+            </tr>
+            <tr>
+                <td class="cell"><label>Usuario Router: </label> {{ usuario_router }}</td>
+                <td class="cell"><label>Contraseña Router: </label> {{ contraseña_router }}</td>
+                <td class="cell"><label>Técnico instalador: </label> {{ tecn_inst }}</td>
+					<td class="cell"><label>Fecha de la Instalación: </label> {{ fecha }}</td>
+            </tr>
+            <tr>
+                <td colspan="4" id="commentbox" contenteditable="true" class="editable-div"> {{ comentario }}</td>
+            </tr>
+        </table>
+                <p>Nº de Cámaras: {{ camaras|length }}</p>
+                {% for camara in camaras %}
+                {% endfor %}
+        {% if not tabla_vacia %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nº</th>
+                        <th>DIRECCIÓN IP</th>
+                        <th>USUARIO</th>
+                        <th>CONTRASEÑA</th>
+                        <th>UBICACIÓN</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in range(numero_filas) %}
+                        <tr>
+                            {% for j in range(numero_columnas) %}
+                                <td>{{ tabla[i][j] }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}    
+    </div>

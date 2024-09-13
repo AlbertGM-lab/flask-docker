@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<style type="text/css">
+    a:link, a:visited, a:active {
+        text-decoration:none;
+    }
+
+    .colorp {
+        color: rgb(41, 34, 34);
+    }
+    
+</style>
+
+<div class="container py-5">
+    {% if current_user.is_authenticated %}
+    <h1 class="display-5 fw-bold text-center colorp">Soporte</h1>
+    <p class="fs-4 py-3 text-center colorp">Por aqui podeis acceder a la web para acceder a vuestro PC</p>
+    <a href="http://soporte.sic24.com/users/main/join.html" target="_blank"><p class="fs-4 py-3 text-center colorp">Soporte</p></a>
+    {% endif %}
+</div>
+
+{% endblock %}

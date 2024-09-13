@@ -1,0 +1,97 @@
+<style>
+	.header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .logo {
+        width: 100px; /* Ajustar según sea necesario */
+        height: auto;
+        margin-right: 10px;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td {
+        padding: 5px 10px;
+        text-align: center;
+        border: 1px solid black;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+	td.cell {
+		width: 100%; /* Ajustar según sea necesario */
+        white-space: nowrap;
+	}
+	td.coment {
+		width: 100%;
+	}
+	textarea.form-control {
+        width: 100%;
+    }
+	h1.titulo {
+		text-align: center;
+	}
+
+    .editable-div {
+	border: 1px solid black;
+	text-align: left;
+    padding: 5px;
+    width: 100%;
+    min-height: 100px;
+    resize: both;
+    overflow: auto;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+</style>
+<div class="container py-5" name="form-cctv-amp">
+    <meta charset="UTF-8">
+    <div class="header">
+        <img src="http://127.0.0.1/static/img/logo-sic24.png" alt="Logotipo" class="logo">
+        <h1 class="titulo">HOJA DE PROGRAMACIÓN AMPLIACIÓN CCTV</h1>
+    </div>
+        <br>
+        <table>
+            <tr>
+                <td class="cell"><label>Cliente: </label> {{ cliente }}</td>
+                <td class="cell"><label>Abonado: </label> {{ abonado }}</td>
+                <td class="cell"><label>Técnico instalador: </label> {{ tecn_inst }}</td>
+				<td class="cell"><label>Fecha de la Instalación: </label> {{ fecha }}</td>
+            </tr>
+            <tr>
+                <td colspan="4" id="commentbox" contenteditable="true" class="editable-div"> {{ comentario }}</td>
+            </tr>
+        </table>
+                <p>Nº de Cámaras: {{ camaras|length }}</p>
+                {% for camara in camaras %}
+                {% endfor %}
+        {% if not tabla_vacia %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nº</th>
+                        <th>DIRECCIÓN IP</th>
+                        <th>USUARIO</th>
+                        <th>CONTRASEÑA</th>
+                        <th>UBICACIÓN</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in range(numero_filas) %}
+                        <tr>
+                            {% for j in range(numero_columnas) %}
+                                <td>{{ tabla[i][j] }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>

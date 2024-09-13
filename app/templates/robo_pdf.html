@@ -1,0 +1,160 @@
+<style>
+	.header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .logo {
+        width: 100px; /* Ajustar según sea necesario */
+        height: auto;
+        margin-right: 10px;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td {
+        padding: 5px 10px;
+        text-align: center;
+        border: 1px solid black;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+	td.cell {
+		width: 100%; /* Ajustar según sea necesario */
+        white-space: nowrap;
+	}
+	td.coment {
+		width: 100%;
+		height: auto;
+	}
+	textarea.form-control {
+        width: 100%;
+    }
+	h1.titulo {
+		text-align: center;
+	}
+
+	.editable-div {
+	border: 1px solid black;
+	text-align: left;
+    padding: 5px;
+    width: 100%;
+    min-height: 100px;
+    resize: both;
+    overflow: auto;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+</style>
+	<div class="container py-5" name="form-robo">
+		<meta charset="UTF-8">
+		<div class="header">
+			<img src="http://127.0.0.1/static/img/logo-sic24.png" alt="Logotipo" class="logo">
+			<h1 class="titulo">HOJA DE PROGRAMACIÓN ROBO</h1>
+		</div>
+			<br>
+			<table>
+				<tr>
+					<td class="cell"><label>Cliente: </label> {{ cliente }}</td>	
+					<td class="cell"><label>Abonado: </label> {{ abonado if abonado }}</td>
+					<td class="cell"><label>Técnico instalador: </label> {{ tecn_inst }}</td>
+					<td class="cell"><label>Fecha de la Instalación: </label> {{ fecha }}</td>
+				</tr>
+				<tr>
+					<td class="cell"><label for="numero"> Modelo de Central: </label>
+            		{% if modelo_central == '1' %}
+                		EVO192
+            		{% elif modelo_central == '2' %}
+                		SP5500
+            		{% elif modelo_central == '3' %}
+                		DSC NEO
+            		{% elif modelo_central == '4' %}
+                		Ajax
+            		{% elif modelo_central == '5' %}
+                		Vesta
+            		{% else %}
+               			 {{ otro_mod }}
+            		{% endif %}
+					</td>
+					<td class="cell"><label>Ubicación de la central: </label> {{ ubi_central }}</td>
+					<td class="cell"><label>Cod. Instalador: </label> {{ cod_inst }}</td>
+					<td class="cell"><label>Nº de Série: </label> {{ n_serie_central }}</td>
+				</tr>
+				<tr>
+					<td class="cell"><label>Dispone de GPRS: </label> {{ GPRS }}</td>
+					<td class="cell"></td>
+					<td class="cell"></td>
+					<td class="cell"></td>
+					<tr>
+            		{% if GPRS == "SI" %}
+			    		<td class="cell"><label>Operador GPRS: </label> {{ operador_gprs }}</td>
+			    		<td class="cell"><label>Modelo GPRS: </label> {{ modelo_gprs }}</td>
+			    		<td class="cell"><label>Nº de SIM: </label> {{ n_sim }}</td>
+			    		<td class="cell"><label>IMEI: </label> {{ imei }}</td>
+            		{% endif %}
+					</tr>
+					<tr>
+						<td class="cell"><label>Dispone de módulo IP: </label> {{ IP }}</td>
+						{% if IP == "SI" %}
+							<td class="cell"><label>Esta por DHCP: </label> {{ DH }}</td>
+							{% if DH == "NO" %}    
+								<td class="cell"><label>Dirección del Módulo IP: </label> {{ dir_ip }}</td>
+								<td class="cell"><label>Puerta de Enlace: </label> {{ puerta_enlace }}</td>
+							{% else %}
+								<td class="cell"></td>
+								<td class="cell"></td>
+							{% endif %}
+						{% else %}
+							<td class="cell"></td>
+							<td class="cell"></td>
+							<td class="cell"></td>
+						{% endif %}
+					</tr>
+				<tr>
+						<td class="cell"><label>Tiene la aplicación configurada? </label> {{ APP }}</td>
+					{% if APP == "SI" %}
+						<td class="cell"><label>Id: </label> {{ id_app }}</td>
+						<td class="cell"><label>E-Mail: </label> {{ email_app }}</td>
+						<td class="cell"></td>
+					{% else %}
+						<td class="cell"></td>
+						<td class="cell"></td>
+						<td class="cell"></td>
+            		{% endif %}
+				</tr>						
+				<tr>
+					<td colspan="4" id="commentbox" contenteditable="true" class="editable-div">{{ text_box }}</td>
+				</tr>
+			</table>		
+					<p>Nº de Zonas: {{ zonas|length }}</p>
+            		{% for zona in zonas %}
+            		{% endfor %}
+			{% if not tabla_vacia %}
+				<table>
+    				<thead>
+        				<tr>
+            				<th>ZONA</th>
+            				<th>UBICACIÓN</th>
+            				<th>PARTICIÓN</th>
+            				<th>TIPO ZONA</th>
+            				<th>CÁMARA ASOCIADA</th>
+        				</tr>
+    				</thead>
+    				<tbody>
+        				{% for i in range(numero_filas) %}
+            				<tr>
+                				{% for j in range(numero_columnas) %}
+                    				<td>{{ tabla[i][j] }}</td>
+                				{% endfor %}
+            				</tr>
+        				{% endfor %}
+    				</tbody>
+				</table>
+			{% endif %}
+	</div>

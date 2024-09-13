@@ -1,0 +1,107 @@
+<style>
+	.header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .logo {
+        width: 100px; /* Ajustar según sea necesario */
+        height: auto;
+        margin-right: 10px;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td {
+        padding: 5px 10px;
+        text-align: center;
+        border: 1px solid black;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+	td.cell {
+		width: 100%; /* Ajustar según sea necesario */
+        white-space: nowrap;
+	}
+	td.coment {
+		width: 100%;
+		height: auto;
+	}
+	textarea.form-control {
+        width: 100%;
+    }
+	h1.titulo {
+		text-align: center;
+	}
+	.editable-div {
+	border: 1px solid black;
+	text-align: left;
+    padding: 5px;
+    width: 100%;
+    min-height: 100px;
+    resize: both;
+    overflow: auto;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+</style>
+<div class="container py-5" name="form-rma">
+    <meta charset="UTF-8">
+    <div class="header">
+        <img src="http://127.0.0.1/static/img/logo-sic24.png" alt="Logotipo" class="logo">
+        <h1 class="titulo">HOJA DE RMA</h1>
+    </div>
+        <br>
+        <table>
+            <tr>
+                <td class="cell" style="width: 50%;"><label>Fecha: </label> {{ fecha }}</td>
+                <td class="cell" style="width: 50%;"><label>Nº: </label> {{ rma }}</td>
+            </tr>
+            <tr>
+                <td class="cell" style="width: 50%;"><label>SAT: </label> {{ sat }}</td>
+                <td class="cell" style="width: 50%;"><label>Transporte: </label> {{ transporte }}</td>
+            </tr>
+            <tr>
+                <td class="cell" style="width: 50%;"><label>Dirección: </label> {{ direccion }}</td>
+                <td class="cell" style="width: 50%;"><label>Código postal: </label> {{ cod_postal }}</td>
+            </tr>
+            <tr>
+                <td class="cell" style="width: 50%;"><label>Población: </label> {{ poblacion }}</td>
+                <td class="cell" style="width: 50%;"><label>Província: </label> {{ provincia }}</td>
+            </tr>
+        </table>
+                <p>Nº de Equipos: {{ equipos|length }}</p>
+                {% for equipo in equipos %}
+                {% endfor %}
+        {% if not tabla_vacia %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nº</th>
+                        <th>AB</th>
+                        <th>MODELO</th>
+                        <th>Nº SERIE</th>
+                        <th>RMA</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in range(numero_filas) %}
+                        <tr>
+                            {% for j in range(numero_columnas) %}
+                                <td>{{ tabla[i][j] }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+                <tr>
+                    <td colspan="5" id="commentbox" contenteditable="true" class="editable-div"> {{ comentario }}</td>
+                </tr>
+            </table>
+        {% endif %}    
+    </div>

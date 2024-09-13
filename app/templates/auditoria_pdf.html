@@ -1,0 +1,95 @@
+<style>
+	.header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .logo {
+        width: 100px; /* Ajustar según sea necesario */
+        height: auto;
+        margin-right: 10px;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td {
+        padding: 5px 10px;
+        text-align: center;
+        border: 1px solid black;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+	td.cell {
+		width: 100%; /* Ajustar según sea necesario */
+        white-space: nowrap;
+	}
+	td.coment {
+		width: 100%;
+		height: auto;
+	}
+	textarea.form-control {
+        width: 100%;
+    }
+	h1.titulo {
+		text-align: center;
+	}
+
+	.editable-div {
+	border: 1px solid black;
+	text-align: left;
+    padding: 5px;
+    width: 100%;
+    min-height: 100px;
+    resize: both;
+    overflow: auto;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+</style>
+	<div class="container py-5" name="form-auditoria">
+		<meta charset="UTF-8">
+		<div class="header">
+			<img src="http://127.0.0.1/static/img/logo-sic24.png" alt="Logotipo" class="logo">
+			<h1 class="titulo">HOJA DE AUDITORIA</h1>
+		</div>
+			<br>
+			<table>
+				<tr>
+					<td class="cell"><label>Abonado: </label> {{ abonado if abonado }}</td>	
+					<td class="cell"><label>Cliente: </label> {{ cliente }}</td>
+					<td class="cell"><label>Técnico instalador: </label> {{ tecnico }}</td>
+					<td class="cell"><label>Fecha de la Instalación: </label> {{ fecha }}</td>
+				</tr>						
+				<tr>
+					<td colspan="4" id="commentbox1" contenteditable="true" class="editable-div"><label>Deficiencias instalaciones sistemas de seguridad: </label> <br> {{ defi_seg }}</td>
+				</tr>
+                <tr>
+					<td colspan="4" id="commentbox2" contenteditable="true" class="editable-div"><label>Descripción propuestas de mejora: </label> <br> {{ prop_mej }}</td>
+				</tr>
+                <tr>
+					<td colspan="4" id="commentbox3" contenteditable="true" class="editable-div"><label>Deficiencias vías de comunicación: </label> <br> {{ defi_com }}</td>
+				</tr>
+                <tr>
+					<td colspan="4" id="commentbox4" contenteditable="true" class="editable-div"><label>Descripción propuestas de mejora: </label> <br> {{ prop_mej_com }}</td>
+				</tr>
+				<tr>
+				<td colspan="4"><label>Detalle medios materiales necesarios para ejecutar las propuestas de mejora</label></td>
+				</tr>
+                <tr>
+					<td class="cell"><label>Elementos: </label> {{ elementos }}</td>	
+					<td class="cell"><label>Cable: </label> {{ cable }}</td>
+					<td class="cell"><label>Cálculo aproximado mano de obra: </label> {{ mano_obra }}</td>
+					<td class="cell"><label>Precisa de ayudante: </label> {{ ayudante }}</td>
+				</tr>
+                <tr>
+					<td class="cell"><label>Medios de elevación: </label> {{ elevacion }}</td>	
+					<td class="cell"><label>Otros: </label> {{ otros }}</td>
+					<td class="cell"></td>
+					<td class="cell"></td>
+				</tr>

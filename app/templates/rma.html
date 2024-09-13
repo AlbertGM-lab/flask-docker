@@ -1,0 +1,161 @@
+{% extends "layout.html" %}
+{% block body %}
+{% if current_user.is_authenticated %}
+    <script type='text/javascript'>
+        function addFields() {
+            var number = document.getElementById("equipos").value;
+            var container = document.getElementById("container");
+            var max = 500;
+            var columnTitles = ["Nº", "AB", "MODELO", "Nº SERIE", "RMA"];
+
+            if (!container.hasChildNodes()) {
+                var table = document.createElement("table");
+                table.border = "1";
+                table.id = "equiposTable";
+
+                // Añadir encabezados de columnas
+                var header = document.createElement("tr");
+                for (var i = 0; i < columnTitles.length; i++) {
+                    var th = document.createElement("th");
+                    var thText = document.createTextNode(columnTitles[i]);
+                    th.appendChild(thText);
+                    header.appendChild(th);
+                }
+                table.appendChild(header);
+                container.appendChild(table);
+            }
+
+            var table = document.getElementById("equiposTable");
+            var rowCount = table.rows.length - 1;
+
+            var equiposToAdd = number - rowCount;
+
+            if (number > max) {
+                alert("No puedes añadir más de " + max + " equipos.")
+                return;
+            }
+
+            if (equiposToAdd > 0) {
+                for (var i = 0; i < equiposToAdd; i++) {
+                    var row = document.createElement("tr");
+
+                    // Añadir filas con campos de entrada
+                    for (var j = 0; j < columnTitles.length; j++) {
+                    var cell = document.createElement("td");
+
+                        // Si estamos en la primera columna, añadir el nombre de la cámara automáticamente
+                        if (j === 0) {
+                        var equipoName = document.createTextNode((rowCount + i + 1));
+                        cell.appendChild(equipoName);
+                        } else {
+                        var input = document.createElement("input");
+                        input.type = "text";
+                        input.name = "fila" + (rowCount + i) + "_columna" + j;
+                        cell.appendChild(input);
+                        }
+
+                        row.appendChild(cell);
+                    }
+                    table.appendChild(row);
+                }
+            }else if (equiposToAdd < 0) {
+                for (var i = 0; i < -equiposToAdd; i++) {
+                    table.deleteRow(rowCount);
+                    rowCount--;
+                }
+            }
+            const numOfEquipos = document.getElementById('equipos').value;
+            let equipoList = '';
+
+            for (let i = 1; i <= numOfEquipos; i++) {
+                equipoList += i + ':\n\n';
+            }
+            document.getElementById('comentario').value = equipoList;
+        }
+    </script>
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td {
+        padding: 5px 10px;
+        text-align: center;
+    }
+
+    input[type="text"] {
+        margin-left: 5px;
+    }
+</style>
+<div class="container py-5">
+    <h1 class="display-5 fw-bold text-center">HOJA DE RMA</h1>
+    <div class="alert alert-danger" id="error-message">{{ error }}</div>
+    <div class="alert alert-success" id="info-message">{{ info }}</div>
+    <form id="rma-form" action="{{ url_for('rma') }}" method="POST" enctype="multipart/form-data" class="pb-5">
+        <fieldset>
+        <p><label>Fecha: </label><input type="date" name="fecha" class="form-control"></p>
+        <p><label>Nº: </label><input class="form-control" type="text" name="rma" id="rma" readonly></p>
+        <br>
+        <p><label>SAT: </label><input class="form-control" type="text" name="sat"></p>
+        <p><label>Transporte: </label><input class="form-control" type="text" name="transporte"></p>
+        <p><label>Dirección: </label><input class="form-control" type="text" name="direccion"></p>
+        <p><label>Código postal: </label><input class="form-control" type="text" name="cod_postal"></p>
+        <p><label>Población: </label><input class="form-control" type="text" name="poblacion"></p>
+        <p><label>Província: </label><input class="form-control" type="text" name="provincia"></p>
+        <p><label>Insertar imágenes:</label><input class="input-group mb-3" type="file" name="fotos" id="photos" accept=".jpg, .jpeg, .png" multiple></p>
+        <br>
+        <p>Nº de Equipos: </p><input type="number" id="equipos" name="equipos" value="" class="form-control">
+        <br>
+        <a href="#" id="filldetails" onclick="addFields()" class="form-control w-100 btn btn-lg btn-primary">Añadir equipos</a>
+        <div id="container" class="form-control"></div>
+        <legend>Observaciones: </legend>
+        <textarea placeholder="Escribe aquí un comentario..." name="comentario" id="comentario" rows="7" cols="90" class="form-control"></textarea>
+        </fieldset>
+        <br>
+        <button type="submit" class="form-control w-100 btn btn-lg btn-primary">Enviar</button>
+    </div>
+    <script>
+		var error = "{{ error }}";
+		document.getElementById("error-message").style.visibility ="hidden";
+		if (error) {
+			document.getElementById("error-message").innerHTML = error;
+			document.getElementById("error-message").style.visibility = "visible";
+		}
+	</script>
+    <script>
+		var info = "{{ info }}";
+		document.getElementById("info-message").style.visibility ="hidden";
+		if (info) {
+			document.getElementById("info-message").innerHTML = info;
+			document.getElementById("info-message").style.visibility = "visible";
+		}
+	</script>
+    <script>
+        // Función para obtener y actualizar el número de RMA desde el servidor
+        async function updateRmaNumber() {
+            const rmaField = document.getElementById('rma');
+            try {
+                const response = await fetch('/get_rma_number');
+                const data = await response.json();
+                rmaField.value = 'R' + data.rma_number;
+            } catch (error) {
+                console.error('Error al obtener el número de RMA:', error);
+            }
+        }
+        async function incrementRmaNumber() {
+            try {
+                await fetch('/increment_rma_number', {method: 'POST'});
+            }catch (error) {
+                console.error('Error al incrementar el número de RMA:', error);
+            }
+        }
+        // Llamada a la función al cargar la página
+        updateRmaNumber();
+
+        document.getElementById('rma-form').addEventListener('submit', (event) => {
+            incrementRmaNumber();
+        })
+    </script>
+{% endif %}
+{% endblock %}

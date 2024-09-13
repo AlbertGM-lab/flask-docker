@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+{% block body %}
+{% if current_user.is_authenticated %}
+    <div class="container py-5" name="auditoria">
+		<div class="alert alert-danger" id="error-message">{{ error }}</div>
+		<div class="alert alert-success" id="info-message">{{ info }}</div>
+		<h1 class="display-5 fw-bold text-center">HOJA DE AUDITORIA</h1>
+		<form action="{{ url_for('auditoria') }}" method="POST" enctype="multipart/form-data" class="pb-5">
+			<fieldset>
+				<p><label>Abonado: </label><input class="form-control" type="text" name="abonado"></p>
+				<p><label>Cliente: </label><input class="form-control" type="text" name="cliente"></p>
+				<p><label>Técnico: </label><input class="form-control" type="text" name="tecnico"></p>
+				<p><label>Fecha de auditoria: </label><input type="date" name="fecha" class="form-control"></p>
+			</fieldset>
+			<legend>DEFICIENCIAS INSTALACIONES SISTEMAS DE SEGURIDAD</legend>
+			<textarea placeholder="Escribe aquí las deficiencias..." name="defi_seg" rows="7" cols="90" class="form-control"></textarea>
+			<legend>DESCRIPCIÓN PROPUESTAS DE MEJORA</legend>
+			<textarea placeholder="Escribe aquí las propuestas de mejora..." name="prop_mej" rows="7" cols="90" class="form-control"></textarea>
+			<legend>DEFICIENCIAS VÍAS DE COMUNICACIÓN</legend>
+			<textarea placeholder="Escribe aquí las deficiencias..." name="defi_com" rows="7" cols="90" class="form-control"></textarea>
+			<legend>DESCRIPCIÓN PROPUESTAS DE MEJORA</legend>
+			<textarea placeholder="Escribe aquí las propuestas de mejora..." name="prop_mej_com" rows="7" cols="90" class="form-control"></textarea>
+			<legend>DETALLE MEDIOS MATERIALES NECESARIOS PARA EJECUTAR LAS PROPUESTAS DE MEJORA</legend>
+			<p><label>Elementos: </label><input class="form-control" type="text" name="elementos"></p>
+			<p><label>Cable: </label><input class="form-control" type="text" name="cable"></p>
+			<p><label>Cálculo aproximado mano de obra: </label><input class="form-control" type="text" name="mano_obra"></p>
+			<p><label>Precisa de ayudante: </label> 
+				<label>SÍ</label> <input id="comprobacionayudante" type="radio" name="ayudante" value="SI"> 
+				<label>NO</label> <input id="comprobacionayudante" type="radio" name="ayudante" value="NO">
+			<p><label>Medios de elevación: </label><input class="form-control" type="text" name="elevacion"></p>
+			<p><label>Otros: </label><input class="form-control" type="text" name="otros"></p>
+			<p><label>Insertar imágenes:</label><input class="input-group mb-3" type="file" name="fotos" id="photos" accept=".jpg, .jpeg, .png" multiple></p>
+			<button type="submit" class="form-control w-100 btn btn-lg btn-primary">Enviar</button>
+		</form>
+	</div>
+	<script>
+		var error = "{{ error }}";
+		document.getElementById("error-message").style.visibility ="hidden";
+		if (error) {
+			document.getElementById("error-message").innerHTML = error;
+			document.getElementById("error-message").style.visibility = "visible";
+		}
+	</script>
+	<script>
+		var info = "{{ info }}";
+		document.getElementById("info-message").style.visibility ="hidden";
+		if (info) {
+			document.getElementById("info-message").innerHTML = info;
+			document.getElementById("info-message").style.visibility = "visible";
+		}
+	</script>
+{% endif %}
+{% endblock %}

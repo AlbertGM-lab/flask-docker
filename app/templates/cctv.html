@@ -1,0 +1,143 @@
+{% extends "layout.html" %}
+{% block body %}
+{% if current_user.is_authenticated %}
+    <script type='text/javascript'>
+        function addFields() {
+            var number = document.getElementById("camara").value;
+            var container = document.getElementById("container");
+            var max = 500;
+            var columnTitles = ["Nº", "DIRECCIÓN IP", "USUARIO", "CONTRASEÑA", "UBICACIÓN"];
+
+            if (!container.hasChildNodes()) {
+                var table = document.createElement("table");
+                table.border = "1";
+                table.id = "cameraTable";
+
+                // Añadir encabezados de columnas
+                var header = document.createElement("tr");
+                for (var i = 0; i < columnTitles.length; i++) {
+                    var th = document.createElement("th");
+                    var thText = document.createTextNode(columnTitles[i]);
+                    th.appendChild(thText);
+                    header.appendChild(th);
+                }
+                table.appendChild(header);
+                container.appendChild(table);
+            }
+
+            var table = document.getElementById("cameraTable");
+            var rowCount = table.rows.length - 1;
+
+            var camerasToAdd = number - rowCount;
+
+            if (number > max) {
+                alert("No puedes añadir más de " + max + " cámaras.")
+                return;
+            }
+            if (camerasToAdd > 0) {
+                for (var i = 0; i < camerasToAdd; i++) {
+                    var row = document.createElement("tr");
+
+                    // Añadir filas con campos de entrada
+                    for (var j = 0; j < columnTitles.length; j++) {
+                        var cell = document.createElement("td");
+
+                        // Si estamos en la primera columna, añadir el nombre de la cámara automáticamente
+                        if (j === 0) {
+                            var cameraName = document.createTextNode("Cámara " + (rowCount + i + 1));
+                            cell.appendChild(cameraName);
+                        } else {
+                            var input = document.createElement("input");
+                            input.type = "text";
+                            input.name = "fila" + (rowCount + i) + "_columna" + j;
+                            cell.appendChild(input);
+                        }
+
+                        row.appendChild(cell);
+                    }
+                    table.appendChild(row);
+                }
+            }else if (camerasToAdd < 0) {
+                for (var i = 0; i < -camerasToAdd; i++) {
+                    table.deleteRow(rowCount);
+                    rowCount--;
+                }
+            }
+        }
+    </script>
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td {
+        padding: 5px 10px;
+        text-align: center;
+    }
+
+    input[type="text"] {
+        margin-left: 5px;
+    }
+</style>
+<div class="container py-5">
+    <h1 class="display-5 fw-bold text-center">HOJA DE PROGRAMACIÓN CCTV</h1>
+    <div class="alert alert-danger" id="error-message">{{ error }}</div>
+    <div class="alert alert-success" id="info-message">{{ info }}</div>
+    <form action="{{ url_for('cctv') }}" method="POST" enctype="multipart/form-data" class="pb-5">
+        <fieldset>
+        <br>
+        <p><label>Modelo del Grabador: </label><input class="form-control" type="text" name="modelo_grabador"></p>
+
+        <p><label>Nº de Série: </label><input class="form-control" type="text" name="n_serie"></p>
+        <p><label>Abonado: </label><input class="form-control" type="text" name="abonado"></p>
+        
+        <p>Videoverificació?</p><input type="radio" id="html" name="videoverificacio" value="SI">
+            <label for="html">SÍ</label><br>
+        <p></p><input type="radio" id="html" name="videoverificacio" value="NO">
+            <label for="html">NO</label>
+        <br>
+
+        <p><label>IP: </label><input class="form-control" type="text" name="ip_gravador"></p>
+        <p><label>Puerta de Enlace: </label><input class="form-control" type="text" name="puerta_enlace"></p>
+        <p><label>Puertos: </label><input class="form-control" type="text" name="puertos"></p>
+        <p><label>DNS / IP Fija: </label><input class="form-control" type="text" name="dns"></p>
+        <p><label>Usuario: </label><input class="form-control" type="text" name="usuario"></p>
+        <p><label>Contraseña: </label><input class="form-control" type="text" name="contraseña"></p>
+        <p><label>Usuario 2: </label><input class="form-control" type="text" name="usuario2"></p>
+        <p><label>Contraseña 2: </label><input class="form-control" type="text" name="contraseña2"></p>
+        <p><label>Usuario Router: </label><input class="form-control" type="text" name="usuario_router"></p>
+        <p><label>Contraseña Router: </label><input class="form-control" type="text" name="contraseña_router"></p>
+        <p><label>Técnico instalador: </label><input class="form-control" type="text" name="tecn_inst"></p>
+		<p><label>Fecha de la Instalación: </label><input type="date" name="fecha" class="form-control"></p>
+        <legend>Comentarios</legend>
+        <textarea placeholder="Escribe aquí un comentario..." name="comentario" rows="7" cols="90" class="form-control"></textarea>
+        </fieldset>
+        <br>
+        <p><label>Insertar imágenes:</label><input class="input-group mb-3" type="file" name="fotos" id="photos" accept=".jpg, .jpeg, .png" multiple></p>
+        <br>
+        <p>Nº de Cámaras: </p><input type="number" id="camara" name="camara" value="" class="form-control">
+        <br>
+        <a href="#" id="filldetails" onclick="addFields()" class="form-control w-100 btn btn-lg btn-primary">Añadir cámaras</a>
+        <br>
+        <div id="container" class="form-control"></div>
+        <button type="submit" class="form-control w-100 btn btn-lg btn-primary">Enviar</button>
+    </div>
+    <script>
+		var error = "{{ error }}";
+		document.getElementById("error-message").style.visibility ="hidden";
+		if (error) {
+			document.getElementById("error-message").innerHTML = error;
+			document.getElementById("error-message").style.visibility = "visible";
+		}
+	</script>
+    <script>
+		var info = "{{ info }}";
+		document.getElementById("info-message").style.visibility ="hidden";
+		if (info) {
+			document.getElementById("info-message").innerHTML = info;
+			document.getElementById("info-message").style.visibility = "visible";
+		}
+	</script>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block body %}
+{% if current_user.is_authenticated %}
+<div class="container py-5">
+	<h1 class="display-5 fw-bold text-center">Escáner de servicios</h1>
+	<p class="fs-4 py-3 text-center">Descubre qué servicios están operativos en una web o IP</p>
+	<form action="/escaner/servicios" method="POST" class="pb-5">
+		<div class="form-floating mb-3">
+			<input type="text" class="form-control" id="ip" name="ip" placeholder="ip" required/>
+			<label for="ip">IP/DDNS</label>
+		</div>
+		<button name="escanear" type="submit" class="w-100 btn btn-lg btn-primary">Escanear</button>
+	</form>
+
+	<hr class="my-5">
+
+	<div class="p-5 my-4 shadow bg-dark text-light rounded-3 pb-0 pe-lg-0 py-lg-3">
+		<div class="container-fluid py-5">
+			<h1 class="display-6 fw-bold">Resultado</h1>
+			<p class="col-md-8 fs-8" style="white-space: pre-wrap;">{{ output }}</p>
+		</div>
+	</div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'layout.html' %}
+
+{% block title %} Editar Usuario {% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="display-5 fw-bold text-center">Editar Usuario</h1>
+    <form action="{{ url_for('update_user', user_id=user.id) }}" method="POST">
+        <div class="form-group">
+            <label for="id">ID</label>
+            <input type="number" class="form-control" id="id" name="id" value="{{ user.id }}" required>
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="name">Nombre</label>
+            <input type="text" class="form-control" id="name" name="name" value="{{ user.name }}" required>
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="role">Rol</label>
+            <select class="form-control" id="role" name="role" required>
+                <option value="usuario" {% if user.role == 'usuario' %}selected{% endif %}>Usuario</option>
+                <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Admin</option>
+                <option value="invitado" {% if user.role == 'invitado' %}selected{% endif %}>Invitado</option>
+            </select>
+        </div>
+        <br>
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+    </form>
+</div>
+{% endblock %}

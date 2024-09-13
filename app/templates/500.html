@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="container py-5 text-center">
+	<h1 class="display-5 fw-bold">Error de servidor interno</h1>
+	<p class="fs-4 py-3">¡Ups! Algo no ha ido bien</p>
+    
+    <a class="btn btn-lg btn-danger" href="{{url_for('home')}}">Volver al inicio</a>
+</div>
+{% endblock %}

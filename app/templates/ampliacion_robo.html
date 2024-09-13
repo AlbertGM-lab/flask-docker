@@ -1,0 +1,117 @@
+{% extends "layout.html" %}
+{% block body %}
+{% if current_user.is_authenticated %}
+	<script type='text/javascript'>
+        function addFields() {
+            var number = document.getElementById("zona").value;
+            var container = document.getElementById("container");
+            var max = 500;
+            var columnTitles = ["ZONA", "UBICACIÓN", "PARTICIÓN", "TIPO ZONA", "CÁMARA ASOCIADA"];
+
+            if (!container.hasChildNodes()) {
+            var table = document.createElement("table");
+            table.border = "0";
+            table.id = "zoneTable";
+
+            // Añadir encabezados de columnas
+            var header = document.createElement("tr");
+            for (var i = 0; i < columnTitles.length; i++) {
+                var th = document.createElement("th");
+                var thText = document.createTextNode(columnTitles[i]);
+                th.appendChild(thText);
+                header.appendChild(th);
+            }
+            table.appendChild(header);
+            container.appendChild(table);
+            }
+
+            var table = document.getElementById("zoneTable");
+            var rowCount = table.rows.length - 1;
+
+            var zonesToAdd = number - rowCount;
+
+            if (number > max) {
+                alert("No puedes añadir más de " + max + " zonas.");
+                return;
+            }
+            if (zonesToAdd > 0) {
+                for (var i = 0; i < zonesToAdd; i++) {
+                var row = document.createElement("tr");
+
+                // Añadir filas con campos de entrada
+                for (var j = 0; j < columnTitles.length; j++) {
+                    var cell = document.createElement("td");
+                    var input = document.createElement("input");
+                    input.type = "text";
+                    input.name = "fila" + (rowCount + i) + "_columna" + j;
+                    cell.appendChild(input);
+                    row.appendChild(cell);
+                }
+                table.appendChild(row);
+                }
+            }else if (zonesToAdd < 0) {
+                for (var i = 0; i < -zonesToAdd; i++) {
+                    table.deleteRow(rowCount);
+                    rowCount--;
+                }
+            }
+        }
+	</script>
+	   <style>
+        table {
+            border-collapse: collapse;
+			width: 100%;
+        }
+
+        th, td {
+            padding: 5px 10px;
+			text-align: center;
+        }
+
+        input[type="text"] {
+            margin-left: 5px;
+        }
+    </style>
+	<div class="container py-5" name="ampliacion-robo">
+		<h1 class="display-5 fw-bold text-center">HOJA DE PROGRAMACIÓN AMPLIACIÓN ROBO</h1>
+		<div class="alert alert-danger" id="error-message">{{ error }}</div>
+        <div class="alert alert-success" id="info-message">{{ info }}</div>
+		<form action="{{ url_for('ampliacion_robo') }}" method="POST" enctype="multipart/form-data" class="pb-5">
+			<fieldset>
+				<p><label>Cliente: </label><input class="form-control" type="text" name="cliente"></p>
+				<p><label>Abonado: </label><input class="form-control" type="number" name="abonado"></p>
+				<p><label>Técnico instalador: </label><input class="form-control" type="text" name="tecn_inst"></p>
+				<p><label>Fecha de la Instalación: </label><input type="date" name="fecha" class="form-control"></p>
+			</fieldset>
+			<legend>Comentarios</legend>
+			<textarea placeholder="Escribe aquí un comentario..." name="text_box" rows="7" cols="90" class="form-control"></textarea>
+			</fieldset>
+            <br>
+            <p><label>Insertar imágenes:</label><input class="input-group mb-3" type="file" name="fotos" id="photos" accept=".jpg, .jpeg, .png" multiple></p>
+			<br>
+			<p>Nº de Zonas: </p><input type="number" id="zona" name="zona" value="" class="form-control">
+			<br>
+			<a href="#" id="filldetails" onclick="addFields()" class="form-control w-100 btn btn-lg btn-primary">Añadir Zonas</a>
+			<br>
+			<div id="container" class="form-control"></div>
+			<button type="submit" class="form-control w-100 btn btn-lg btn-primary">Enviar</button>
+		</form>
+	</div>
+	<script>
+		var error = "{{ error }}";
+		document.getElementById("error-message").style.visibility ="hidden";
+		if (error) {
+			document.getElementById("error-message").innerHTML = error;
+			document.getElementById("error-message").style.visibility = "visible";
+		}
+	</script>
+    <script>
+		var info = "{{ info }}";
+		document.getElementById("info-message").style.visibility ="hidden";
+		if (info) {
+			document.getElementById("info-message").innerHTML = info;
+			document.getElementById("info-message").style.visibility = "visible";
+		}
+	</script>
+{% endif %}
+{% endblock %}

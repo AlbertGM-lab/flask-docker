@@ -1,0 +1,123 @@
+{% extends 'layout.html' %}
+
+{% block title %} Register {% endblock %}
+
+{% block content %}
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<div class="container py-5">
+    <h1 class="display-5 fw-bold text-center">Registro de usuario</h1>
+    <div class="alert alert-danger" id="error-message">{{ error }}</div>
+    <div class="alert alert-success" id="info-message">{{ info }}</div>
+    <div class="form-floating mb-3">
+        <form action="{{ url_for('register') }}" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Nombre:</label>
+                <input type="text" class="form-control" name="name">
+            </div>
+            <br>
+            <div class="form-group">
+                <label>E-Mail:</label>
+                <input type="text" class="form-control" name="email">
+            </div>
+            <br>
+            <div class="form-group">
+                <label>Contraseña:</label>
+                <input type="password" class="form-control" id="password" name="password">
+            </div>
+            <br>
+            <div class="form-group">
+                <label>Confirmar contraseña:</label>
+                <input type="password" class="form-control" name="password_confirm">
+            </div>
+            <div class="progress mt-2">
+                <div id="password-strength-bar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            <div id="password-strength-text" class="mt-1"></div>
+            <br>
+            <div class="form-group">
+                <label>Rol:</label>
+                <select name="role" id="role" class="form-control">
+                    <option value="1">admin</option>
+                    <option value="2">usuario</option>
+                    <option value="3">invitado</option>
+                </select>
+            </div>
+            <br>
+            <div class="form-group">
+                <button type="submit" class="w-100 btn btn-lg btn-primary">Registrar</button>
+            </div>
+            <br>
+            <div class="form-group">
+                <a href="{{url_for('home')}}" class="w-100 btn btn-lg btn-primary">Volver al inicio</a>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    var info = "{{ info }}";
+    document.getElementById("info-message").style.visibility ="hidden";
+    if (info) {
+        document.getElementById("info-message").innerHTML = info;
+        document.getElementById("info-message").style.visibility = "visible";
+    }
+</script>
+<script>
+    var error = "{{ error }}";
+    document.getElementById("error-message").style.visibility ="hidden";
+    if (error) {
+        document.getElementById("error-message").innerHTML = error;
+        document.getElementById("error-message").style.visibility = "visible";
+    }
+</script>
+<script>
+    $(document).ready(function () {
+        $("#password").on("input", function () {
+            var password = $(this).val();
+            var strength = 0;
+
+            if (password.length < 6) {
+                updateProgressBar(0, "red", "La contraseña es demasiado corta.");
+            } else {
+                if (password.match(/[a-z]+/)) {
+                    strength += 1;
+                }
+                if (password.match(/[A-Z]+/)) {
+                    strength += 1;
+                }
+                if (password.match(/[0-9]+/)) {
+                    strength += 1;
+                }
+                if (password.match(/[^a-zA-Z0-9]+/)) {
+                    strength += 1;
+                }
+
+                switch (strength) {
+                    case 1:
+                        updateProgressBar(25, "red", "Contraseña débil.");
+                        break;
+                    case 2:
+                        updateProgressBar(50, "orange", "Contraseña media.");
+                        break;
+                    case 3:
+                        updateProgressBar(75, "yellow", "Contraseña fuerte.");
+                        break;
+                    case 4:
+                        updateProgressBar(100, "green", "Contraseña muy fuerte.");
+                        break;
+                }
+            }
+        });
+
+        function updateProgressBar(width, color, message) {
+            $("#password-strength-bar")
+                .css("width", width + "%")
+                .css("background-color", color)
+                .attr("aria-valuenow", width);
+            $("#password-strength-text").text(message);
+        }
+    });
+</script>
+
+{% endblock %}

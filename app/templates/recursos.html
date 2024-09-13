@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block body %}
+{% if current_user.is_authenticated %}
+
+<style type="text/css">
+    a:link, a:visited, a:active {
+        text-decoration:none;
+    }
+
+    .colorp {
+        color: rgb(41, 34, 34);
+    }
+    
+</style>
+<div class="container py-5">
+    <h1 class="display-5 fw-bold text-center colorp">Recursos</h1>
+    <p class="fs-4 py-3 text-center colorp">Aquí encontrarás todos los recursos y herramientas!</p>
+    <a href="http://gofile.me/40I3s/q8ys3xH40" target="_blank"><p class="fs-4 py-3 text-center colorp">General (Todos los recursos)</p></a>
+    <a href="http://gofile.me/40I3s/TiJ2cmgTq" target="_blank"><p class="fs-4 py-3 text-center colorp">Software</p></a>
+    <a href="http://gofile.me/40I3s/1t5x4gD7w" target="_blank"><p class="fs-4 py-3 text-center colorp">Firmware</p></a>
+    <a href="http://gofile.me/40I3s/lIxkEZ8TN" target="_blank"><p class="fs-4 py-3 text-center colorp">Manuales</p></a>
+</div>
+{% endif %}
+{% endblock %}

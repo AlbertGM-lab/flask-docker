@@ -1,0 +1,235 @@
+{% extends "layout.html" %}
+{% block body %}
+{% if current_user.is_authenticated %}
+	<script type='text/javascript'>
+        function addFields() {
+  			var number = document.getElementById("zona").value;
+  			var container = document.getElementById("container");
+			var max = 500;
+  			var columnTitles = ["ZONA", "UBICACIÓN", "PARTICIÓN", "TIPO ZONA", "CÁMARA ASOCIADA"];
+
+  			if (!container.hasChildNodes()) {
+    			var table = document.createElement("table");
+    			table.border = "1";
+    			table.id = "zoneTable";
+
+    			// Añadir encabezados de columnas
+    			var header = document.createElement("tr");
+    			for (var i = 0; i < columnTitles.length; i++) {
+      				var th = document.createElement("th");
+      				var thText = document.createTextNode(columnTitles[i]);
+      				th.appendChild(thText);
+      				header.appendChild(th);
+   				}
+    			table.appendChild(header);
+    			container.appendChild(table);
+  			}
+
+  			var table = document.getElementById("zoneTable");
+  			var rowCount = table.rows.length - 1;
+
+  			var zonesToAdd = number - rowCount;
+
+			if (number > max) {
+				alert("No puedes añadir más de " + max + " zonas.");
+				return;
+			}
+
+			if (zonesToAdd > 0) {
+  				for (var i = 0; i < zonesToAdd; i++) {
+    				var row = document.createElement("tr");
+
+    				// Añadir filas con campos de entrada
+    				for (var j = 0; j < columnTitles.length; j++) {
+      					var cell = document.createElement("td");
+
+      					// Si estamos en la primera columna, añadir el nombre de la zona automáticamente
+      					if (j === 0) {
+        					var zoneName = document.createTextNode("Zona " + (rowCount + i + 1));
+        					cell.appendChild(zoneName);
+      					} else {
+        					var input = document.createElement("input");
+        					input.type = "text";
+        					input.name = "fila" + (rowCount + i) + "_columna" + j;
+        					cell.appendChild(input);
+      					}
+
+      					row.appendChild(cell);
+    				}
+    				table.appendChild(row);
+  				}
+			}else if (zonesToAdd < 0) {
+				for (var i = 0; i < -zonesToAdd; i++) {
+					table.deleteRow(rowCount);
+					rowCount--;
+				}
+			}
+		}
+		function ensenyarContenidogprs() {
+        	element = document.getElementById("contenidogprs");
+        	check = document.getElementById("comprobaciongprs");
+
+       		if (check.checked) {
+            element.style.display='block';
+        	}
+        	else {
+            element.style.display='none';
+        	}
+    	}
+
+    	function ensenyarContenidoip() {
+        	element = document.getElementById("contenidoip");
+        	check = document.getElementById("comprobacionip");
+
+        	if (check.checked) {
+            element.style.display='block';
+        	}
+        	else {
+            element.style.display='none';
+        	}
+    	}
+
+		function ensenyarContenidodh() {
+        	element = document.getElementById("contenidodh");
+        	check = document.getElementById("comprobaciondh");
+
+        	if (check.checked) {
+            element.style.display='none';
+        	}
+        	else {
+            element.style.display='block';
+        	}
+    	}
+
+		function ensenyarContenidoapp() {
+        	element = document.getElementById("contenidoapp");
+        	check = document.getElementById("comprobacionapp");
+
+        	if (check.checked) {
+            element.style.display='block';
+        	}
+        	else {
+            element.style.display='none';
+        	}
+    	}
+	</script>
+	   <style>
+        table {
+            border-collapse: collapse;
+			width: 100%;
+        }
+
+        th, td {
+            padding: 5px 10px;
+			text-align: center;
+        }
+
+        input[type="text"] {
+            margin-left: 5px;
+        }
+    </style>
+	<div class="container py-5" name="form-robo">
+		<h1 class="display-5 fw-bold text-center">HOJA DE PROGRAMACIÓN ROBO</h1>
+		<div class="alert alert-danger" id="error-message">{{ error }}</div>
+		<div class="alert alert-success" id="info-message">{{ info }}</div>
+		<form action="{{ url_for('robo') }}" method="POST" enctype="multipart/form-data" class="pb-5">
+			<fieldset>
+			<br>
+			<label for="numero"> Modelo de Central: </label>
+			<select name="numero" id="numero" class="form-control">
+				<option value="1">EVO192</option>
+				<option value="2">SP5500</option>
+				<option value="3">DSC NEO</option>
+				<option value="4">Ajax</option>
+				<option value="5">Vesta</option>
+				<option value="6">Otra</option>
+			</select>
+			<br>
+			<p><input class="form-control" type="text" name="otro_mod" id="otro_modelo" placeholder="Especifica el modelo" style="display: none;"></p>
+			<p><label>Ubicación de la central: </label><input class="form-control" type="text" name="ubi_central"></p>
+			<p><label>Cod. Instalador: </label><input class="form-control" type="number" name="cod_inst"></p>
+			<p><label>Nº de Série: </label><input class="form-control" type="text" name="n_serie_central"></p>
+			<p><label>Dispone de GPRS: </label> 
+			   <label>SÍ</label><input id="comprobaciongprs" type="radio" name="GPRS" value="SI" onchange="javascript:ensenyarContenidogprs()"> 
+			   <label>NO</label><input id="comprobaciongprs" type="radio" name="GPRS" value="NO" onchange="javascript:ensenyarContenidogprs()">
+			</p>
+			<div id="contenidogprs" style="display: none;">
+			<p><label>Operador GPRS: </label><input class="form-control" type="text" name="operador_gprs"></p>
+			<p><label>Modelo GPRS: </label><input class="form-control" type="text" name="modelo_gprs"></p>
+			<p><label>Nº de SIM: </label><input class="form-control" type="number" name="n_sim"></p>
+			<p><label>IMEI: </label><input class="form-control" type="number" name="imei"></p>
+			</div>
+			<p><label>Dispone de módulo IP: </label> 
+			   <label>SÍ</label><input id="comprobacionip" type="radio" name="IP" value="SI" onchange="javascript:ensenyarContenidoip()"> 
+			   <label>NO</label><input id="comprobacionip" type="radio" name="IP" value="NO" onchange="javascript:ensenyarContenidoip()">
+			</p>
+			<div id="contenidoip" style="display: none;">
+			<p><label>Esta por DHCP: </label> 
+			   <label>SÍ</label><input id="comprobaciondh" type="radio" name="DH" value="SI" onchange="javascript:ensenyarContenidodh()"> 
+			   <label>NO</label><input id="comprobaciondh" type="radio" name="DH" value="NO" onchange="javascript:ensenyarContenidodh()">
+			</p>
+			<div id="contenidodh" id="contenidoip" style="display: none;">
+			<p><label>Dirección del Módulo IP: </label><input class="form-control" type="text" name="dir_ip"></p>
+			<p><label>Puerta de Enlace: </label><input class="form-control" type="text" name="puerta_enlace"></p>
+			</div>
+			</div>
+			<p><label>Tiene la aplicación configurada? </label> 
+			   <label>SÍ</label><input id="comprobacionapp" type="radio" name="APP" value="SI" onchange="javascript:ensenyarContenidoapp()"> 
+			   <label>NO</label><input id="comprobacionapp" type="radio" name="APP" value="NO" onchange="javascript:ensenyarContenidoapp()">
+			</p>
+			<div id="contenidoapp" style="display: none;">
+			<p><label>Id: </label><input class="form-control" type="text" name="id_app"></p>
+			<p><label>E-Mail: </label><input class="form-control" type="text" name="email_app"></p>
+			</div>
+			<br>
+			<br>
+			<fieldset>
+				<p><label>Cliente: </label><input class="form-control" type="text" name="cliente"></p>
+				<p><label>Abonado: </label><input class="form-control" type="text" name="abonado"></p>
+				<p><label>Técnico instalador: </label><input class="form-control" type="text" name="tecn_inst"></p>
+				<p><label>Fecha de la Instalación: </label><input type="date" name="fecha" class="form-control"></p>
+			</fieldset>
+			<legend>Comentarios</legend>
+			<textarea placeholder="Escribe aquí un comentario..." name="text_box" rows="7" cols="90" class="form-control"></textarea>
+			</fieldset>
+			<br>
+			<p><label>Insertar imágenes:</label><input class="input-group mb-3" type="file" name="fotos" id="photos" accept=".jpg, .jpeg, .png" multiple></p>
+			<br>
+			<p>Nº de Zonas: </p><input type="number" id="zona" name="zona" value="" class="form-control">
+			<br>
+			<a href="#" id="filldetails" onclick="addFields()" class="form-control w-100 btn btn-lg btn-primary">Añadir Zonas</a>
+			<br>
+			<div id="container" class="form-control"></div>
+			<button type="submit" class="form-control w-100 btn btn-lg btn-primary">Enviar</button>
+		</form>
+	</div>
+	<script>
+		document.getElementById("numero").addEventListener("change", function (e) {
+		  const selectValue = e.target.value;
+		  const inputOtroModelo = document.getElementById("otro_modelo");
+	
+		  if (selectValue === "6") {
+			inputOtroModelo.style.display = "block";
+		  } else {
+			inputOtroModelo.style.display = "none";
+		  }
+		});
+	  </script>
+	<script>
+		var error = "{{ error }}";
+		document.getElementById("error-message").style.visibility ="hidden";
+		if (error) {
+			document.getElementById("error-message").innerHTML = error;
+			document.getElementById("error-message").style.visibility = "visible";
+		}
+	</script>
+	<script>
+		var info = "{{ info }}";
+		document.getElementById("info-message").style.visibility ="hidden";
+		if (info) {
+			document.getElementById("info-message").innerHTML = info;
+			document.getElementById("info-message").style.visibility = "visible";
+		}
+	</script>
+{% endif %}
+{% endblock %}

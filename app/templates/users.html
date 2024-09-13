@@ -1,0 +1,127 @@
+{% extends 'layout.html' %}
+
+{% block title %} Gestión de Usuarios {% endblock %}
+
+{% block content %}
+<style>
+	.header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .logo {
+        width: 100px; /* Ajustar según sea necesario */
+        height: auto;
+        margin-right: 10px;
+    }
+    table {
+        border-collapse: collapse;
+        width: 50%;
+        align-content: center;
+    }
+
+    th, td {
+        padding: 5px 10px;
+        text-align: center;
+        border: 1px solid black;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+	td.cell-id {
+        width: 5%; /* Ajustar según sea necesario */
+    }
+
+    td.cell-username {
+        width: 30%; /* Ajustar según sea necesario */
+    }
+
+    td.cell-email {
+        width: 35%; /* Ajustar según sea necesario */
+    }
+
+    td.cell-role {
+        width: 10%; /* Ajustar según sea necesario */
+    }
+    td.cell-actions {
+        width: 20%; /* Ajustar según sea necesario */
+    }
+	h1.titulo {
+		text-align: center;
+	}
+    .table-container {
+        display: flex;
+        justify-content: center;
+    }
+</style>
+<head>
+    <script src="https://kit.fontawesome.com/fd331028be.js" crossorigin="anonymous"></script>
+</head>
+<div class="container py-5">
+    <h1 class="display-5 fw-bold text-center">Gestión de usuarios</h1>
+    <div class="alert alert-success" id="info-message">{{ info }}</div>
+    <div class="table-container">
+    <body>
+        <table>
+            <thead>
+                <tr>
+                    <th class="cell">ID</th>
+                    <th class="cell">Nombre de Usuario</th>
+                    <th class="cell">Email</th>
+                    <th class="cell">Rol</th>
+                    <th class="cell">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td class="cell-id">{{ user.id }}</td>
+                        <td class="cell-username">{{ user.name }}</td>
+                        <td class="cell-email">{{ user.email }}</td>
+                        <td class="cell-role">{{ user.role }}</td>
+                        <td class="cell-actions">
+                            <a href="{{ url_for('edit_user', user_id=user.id) }}" class="btn btn-primary d-inline-block me-2">
+                                <i class="fas fa-edit"></i>
+                            </a>  <!-- Añade un enlace para editar -->
+                            <form action="{{ url_for('delete_user', user_id=user.id) }}" method="POST" class="d-inline-block delete-user-form">
+                            <button type="button" class="btn btn-danger delete-user-button" data-user-id="{{ user.id  }}" data-user-name="{{ user.name }}">
+                                <i class="fas fa-times"></i>
+                            </button>  <!-- Añade un enlace para eliminar -->
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+    </div>
+    <script>
+        var info = "{{ info }}";
+        document.getElementById("info-message").style.visibility ="hidden";
+        if (info) {
+            document.getElementById("info-message").innerHTML = info;
+            document.getElementById("info-message").style.visibility = "visible";
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteUserButtons = document.querySelectorAll('.delete-user-button');
+    
+            deleteUserButtons.forEach(function(deleteUserButton) {
+                const deleteUserForm = deleteUserButton.closest('.delete-user-form');
+                const userId = deleteUserButton.dataset.userId;
+                const userName = deleteUserButton.dataset.userName;
+    
+                deleteUserButton.addEventListener('click', function(event) {
+                    const isConfirmed = confirm(`¿Estás seguro de que deseas eliminar al usuario ${userId}: ${userName}?`);
+                    if (isConfirmed) {
+                        deleteUserForm.submit();
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}
